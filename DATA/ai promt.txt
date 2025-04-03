@@ -1,0 +1,30 @@
+App maker, app maker, make me an app.  I want to make a streamlit app called Persona.  In this app, I have pages: Home, Agents, Persona Chat, accessible by a side static nav bar.  I have a file utils.py that has several useful functions I will use.  You dont have to write utils.py for me.  I have a session state variable agent_dict = {}.  As I create agents, I will add them here, key being the agents name and value being the agents persona prompt.  The app works as follows:
+
+#Pages
+1) Home - I want to have a text box titled "Agent Name" and below it a large reactangle where I can drag in PDF, DOCX, TXT, or CSV files and below the rectangle is a button "Create Agent".  When I enter an agent name, and an appropriate file is dragged in, I pass the agent_name and file_path to get_persona_prompt(agent_name, file_path) which takes the agent_name string and file_path string and returns a string called persona_prompt, which should be added to agent_dict as agent_dict[agent_name] = persona_prompt.  After this is done, show the text f"Agent {agent_name} created!".
+
+2) Agents - on this page I want a dropdown menu of the agent names in agent_dict.  When i choose an agent, show the value agent_dict[agent_name] which is their persona_prompt in a scrollable box (the prompt might be long).
+
+
+3) Persona Chat - on this page I want a dropdown where I can choose an agent_name.  When I do, create a session state variable current_persona_prompt and a session state variable messages which is an empty list.  Then I want a chat box where I chat with the agent.  When I hit enter or click Send, append the curent user_message to the messages as a dictionary {"role":"user","content":user_message} and then call the function get_persona_response(current_persona_prompt, messages), where messages is a list of the message history, which returns persona_response.  Show an animated ... while get_persona_response is working using the st.spinner function.  Then show the persona_response in the chat and have it right above the text input box, so the whole conversation moves up.  print the persona_response in the terminal for debugging.  add persona_message to messages as a dictionary {"role":"assistant","content":persona_response}
+
+If I choose a new agent_name, reset the current_persona_prompt and messages variables.
+
+4) Persona Debate - on this page i have to dropdowns side by side "Agent 1"  and "Agent 2" where I can choose state variables agent_name_1 and agent_name_2, and persona_prompt_1 and persona_prompt_2.  Initialize messages_1 and messages_2 as empty lists.  If I change either of these agents, reset their variables. 
+
+Below the agent selection boxes is a container for a chat between the two agents.  The consersation proceeds as follows.  
+	a) initially Agent 1 starts with a hard coded message agent_1_message= "hi".  this is added to messages_1 as a dictionary {"role":"assistant","content":agent_1_message} and it is added to messages_2 as a dictionary {"role":"user","content":agent_1_message}
+
+	b) There is a button Make agents converse that when you press it, this happens:
+
+		1) with st.spinner, Agent 2 creates agent_2_message= get_persona_response(persona_prompt_2, messages_2).  this is added to messages_1 as a dictionary {"role":"user","content":agent_2_message} and it is added to messages_2 as a dictionary {"role":"assistant","content":agent_2_message}. sleep for 2 seconds
+
+		2)	with st.spinner, Agent 1 creates agent_1_message= get_persona_response(persona_prompt_1, messages_1).  this is added to messages_1 as a dictionary {"role":"assistant","content":agent_1_message} and it is added to messages_2 as a dictionary {"role":"user","content":agent_1_message} sleep for 2 seconds.
+
+	d) show the conversation history
+
+	
+
+st.experimental_rerun() will give an error, so use st.rerun()
+
+

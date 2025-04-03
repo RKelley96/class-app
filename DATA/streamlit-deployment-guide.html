@@ -1,0 +1,1145 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploying Streamlit Apps - MSOM 630: Gen AI and Social Media</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            scroll-margin-top: 80px; /* This ensures headings aren't cut off when scrolling to anchors */
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #f5f5f5;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .sidebar-header {
+            padding: 0 20px 15px 20px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        .sidebar-header h3 {
+            color: #0f62fe;
+            margin: 0;
+        }
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .nav-links li {
+            padding: 8px 20px;
+            margin: 2px 0;
+        }
+        .nav-links li:hover {
+            background-color: #e9ecef;
+        }
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+        .nav-links .sub-link {
+            padding-left: 15px;
+            font-size: 13px;
+            color: #555;
+        }
+        .content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px 40px;
+            max-width: 1000px;
+        }
+        h1 {
+            color: #0f62fe;
+            border-bottom: 2px solid #0f62fe;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0f62fe;
+            margin-top: 30px;
+        }
+        h3 {
+            margin-top: 25px;
+            color: #444;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .step {
+            background-color: #f9f9f9;
+            border-left: 4px solid #0f62fe;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+        }
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .tip {
+            background-color: #e1f5fe;
+            border-left: 4px solid #03a9f4;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .logo {
+            max-width: 150px;
+        }
+        .active {
+            background-color: #e1f5fe;
+            border-left: 3px solid #0f62fe;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .content {
+                margin-left: 200px;
+            }
+        }
+        @media (max-width: 576px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Contents</h3>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#step1">Step 1: Create GitHub Account</a></li>
+                <li><a href="#step2">Step 2: Create Repository</a></li>
+                <li><a href="#step3">Step 3: Download Git</a></li>
+                <li><a href="#step4">Step 4: Configure Git</a></li>
+                <li><a href="#step5">Step 5: Set Up VS Code</a></li>
+                <li><a href="#step6">Step 6: Clone Repository</a></li>
+                <li><a href="#step7">Step 7: Set Up App Files</a></li>
+                <li><a href="#step8">Step 8: Create GitHub Token</a></li>
+                <li><a href="#step9">Step 9: Push Code to GitHub</a></li>
+                <li><a href="#step10">Step 10: Deploy to Streamlit</a></li>
+                <li><a href="#step11">Step 11: Update Your App</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+                <li><a href="#best-practices">Best Practices</a></li>
+                <li><a href="#resources">Additional Resources</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="header">
+                <h1>Deploying Streamlit Apps to Streamlit Community Cloud</h1>
+                <div>Yale School of Management<br>MSOM 630: Gen AI and Social Media<br>Prof. Zaman</div>
+            </div>
+
+            <h2 id="overview">Overview</h2>
+            <p>This guide will walk you through the process of deploying your Streamlit applications to the Streamlit Community Cloud platform. By the end of this tutorial, you'll have your app accessible on the web for anyone to use.</p>
+            
+            <div class="note">
+                <strong>Note:</strong> Make sure you have your Streamlit app code ready before starting this process. You should have a functioning app that runs locally using <code>streamlit run app.py</code>.
+            </div>
+
+            <h2 id="step1">Step 1: Create a GitHub Account</h2>
+            <div class="step">
+                <h3>1.1 Sign Up for GitHub</h3>
+                <p>If you don't already have a GitHub account, you'll need to create one:</p>
+                <ol>
+                    <li>Go to <a href="https://github.com/" target="_blank">https://github.com/</a></li>
+                    <li>Click on "Sign up" in the top-right corner</li>
+                    <li>Follow the prompts to create your account
+                        <ul>
+                            <li>Enter your email</li>
+                            <li>Create a password</li>
+                            <li>Choose a username</li>
+                        </ul>
+                    </li>
+                    <li>Verify your email address when prompted</li>
+                </ol>
+            </div>
+
+            <h2 id="step2">Step 2: Create a New Repository</h2>
+            <div class="step">
+                <h3>2.1 Create a New Repository</h3>
+                <p>Once logged into GitHub:</p>
+                <ol>
+                    <li>Click the "+" icon in the top-right corner, then select "New repository"</li>
+                    <li>Name your repository (e.g., "streamlit-app" or something more specific to your project)</li>
+                    <li>Add a description (optional but recommended)</li>
+                    <li>Keep the repository Public (required for free Streamlit Community Cloud deployment)</li>
+                    <li>Check the box to "Add a README file"</li>
+                    <li>Click "Create repository"</li>
+                </ol>
+                
+                <div class="tip">
+                    <strong>Tip:</strong> Use a clear, descriptive name for your repository. This will help you and others identify your project later.
+                </div>
+            </div>
+
+            <h2 id="step3">Step 3: Download and Install Git</h2>
+            <div class="step">
+                <h3>3.1 Download Git</h3>
+                <p>Download Git from the official website based on your operating system:</p>
+                
+                <h4>For Windows:</h4>
+                <ol>
+                    <li>Go to <a href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a></li>
+                    <li>The download should start automatically</li>
+                    <li>Run the installer and follow the prompts
+                        <ul>
+                            <li>Accept the default settings for most options</li>
+                            <li>When asked about "Adjusting your PATH environment", select "Git from the command line and also from 3rd-party software"</li>
+                            <li>For "Configuring the line ending conversions", choose "Checkout Windows-style, commit Unix-style line endings"</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <h4>For Mac:</h4>
+                <p>Option 1: If you have Homebrew installed:</p>
+                <pre>brew install git</pre>
+                
+                <p>Option 2: Download the installer:</p>
+                <ol>
+                    <li>Go to <a href="https://git-scm.com/download/mac" target="_blank">https://git-scm.com/download/mac</a></li>
+                    <li>Download the latest Git for Mac installer</li>
+                    <li>Open the downloaded .dmg file and run the installer</li>
+                </ol>
+                
+                <h3>3.2 Verify Git Installation</h3>
+                <p>After installation, verify Git is correctly installed by opening a terminal (Command Prompt on Windows, Terminal on Mac) and running:</p>
+                <pre>git --version</pre>
+                <p>You should see the Git version number displayed.</p>
+            </div>
+
+            <h2 id="step4">Step 4: Configure Git</h2>
+            <div class="step">
+                <h3>4.1 Set Your Identity</h3>
+                <p>Configure your Git identity with your name and email (use the same email as your GitHub account):</p>
+                <pre>git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"</pre>
+
+                <h3>4.2 Verify Your Git Configuration</h3>
+                <p>You can check your Git identity settings with these commands:</p>
+                <pre>git config user.name
+git config user.email</pre>
+                <p>To view all your Git configuration settings:</p>
+                <pre>git config --list</pre>
+            </div>
+
+            <h2 id="step5">Step 5: Set Up VS Code</h2>
+            <div class="step">
+                <h3>5.1 Download and Install VS Code</h3>
+                <p>If you don't already have VS Code installed:</p>
+                <ol>
+                    <li>Go to <a href="https://code.visualstudio.com/" target="_blank">https://code.visualstudio.com/</a></li>
+                    <li>Download the appropriate version for your operating system</li>
+                    <li>Run the installer and follow the prompts</li>
+                </ol>
+                
+                <h3>5.2 Install Helpful Extensions</h3>
+                <p>VS Code has several extensions that make working with Python and Streamlit easier:</p>
+                <ol>
+                    <li>Open VS Code</li>
+                    <li>Click on the Extensions icon in the sidebar (or press Ctrl+Shift+X / Cmd+Shift+X)</li>
+                    <li>Search for and install the following extensions:
+                        <ul>
+                            <li>"Python" (by Microsoft)</li>
+                            <li>"Pylance" (by Microsoft)</li>
+                            <li>"GitHub Pull Requests and Issues" (by GitHub)</li>
+                            <li>"Streamlit" (for Streamlit code snippets and syntax highlighting)</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <h2 id="step6">Step 6: Clone Your Repository</h2>
+            <div class="step">
+                <h3>6.1 Clone with VS Code</h3>
+                <ol>
+                    <li>Open VS Code</li>
+                    <li>Press F1 or Ctrl+Shift+P (Cmd+Shift+P on Mac) to open the command palette</li>
+                    <li>Type "Git: Clone" and select that option</li>
+                    <li>Enter the URL of your GitHub repository (e.g., <code>https://github.com/yourusername/streamlit-app.git</code>)</li>
+                    <li>Select a local folder to store your repository</li>
+                    <li>When prompted, open the cloned repository</li>
+                </ol>
+                
+                <h3>6.2 Alternative: Clone with Terminal</h3>
+                <p>If you prefer using the terminal:</p>
+                <ol>
+                    <li>Open a terminal or command prompt</li>
+                    <li>Navigate to the directory where you want to store your project</li>
+                    <li>Run the following command, replacing the URL with your repository URL:
+                        <pre>git clone https://github.com/yourusername/streamlit-app.git</pre>
+                    </li>
+                    <li>Navigate into the cloned repository:
+                        <pre>cd streamlit-app</pre>
+                    </li>
+                    <li>Open VS Code in this directory:
+                        <pre>code .</pre>
+                    </li>
+                </ol>
+                
+                <h3>6.3 Verify Repository Connection</h3>
+                <p>Check that your local repository is correctly connected to GitHub:</p>
+                <pre>git remote -v</pre>
+                <p>This will display your remote repository URLs. You should see something like:</p>
+                <pre>origin  https://github.com/yourusername/streamlit-app.git (fetch)
+origin  https://github.com/yourusername/streamlit-app.git (push)</pre>
+            </div>
+
+            <h2 id="step7">Step 7: Set Up Your Streamlit App Files</h2>
+            <div class="step">
+                <h3>7.1 Create App Files</h3>
+                <p>Now that you have your repository cloned locally, add your Streamlit app files to the repository:</p>
+                <ol>
+                    <li>Create a new file called <code>app.py</code> (or use your existing file)</li>
+                    <li>Add your Streamlit app code to this file</li>
+                    <li>Create a <code>requirements.txt</code> file listing all the Python packages your app needs:
+                        <pre>streamlit==1.27.0
+pandas==2.0.3
+numpy==1.24.3
+matplotlib==3.7.2
+# Add any other packages your app requires</pre>
+                    </li>
+                </ol>
+                
+                <h3>7.2 File Structure</h3>
+                <p>Your repository should have a structure similar to this:</p>
+                <pre>
+streamlit-app/
+├── README.md
+├── app.py
+├── requirements.txt
+└── data/ (optional folder for any data files)
+    └── dataset.csv</pre>
+                    
+                <div class="note">
+                    <strong>Note:</strong> If your app uses any data files, make sure to include them in your repository.
+                </div>
+            </div>
+
+            <h2 id="step8">Step 8: Create a GitHub Personal Access Token</h2>
+            <div class="step">
+                <p>Before pushing to GitHub for the first time, you'll need to create a Personal Access Token (PAT). GitHub no longer accepts regular passwords for Git operations.</p>
+                
+                <h3>8.1 Create a Personal Access Token</h3>
+                <ol>
+                    <li>Go to <a href="https://github.com/settings/tokens" target="_blank">https://github.com/settings/tokens</a> (or navigate to GitHub → Settings → Developer settings → Personal access tokens)</li>
+                    <li>Click "Generate new token" (or "Generate new token (classic)")</li>
+                    <li>Give your token a descriptive name (e.g., "Streamlit App Development")</li>
+                    <li>Set an expiration date (30 days is a good starting point for class projects)</li>
+                    <li>Select scopes/permissions:
+                        <ul>
+                            <li>At minimum, check the "repo" box to get full control of repositories</li>
+                        </ul>
+                    </li>
+                    <li>Scroll down and click "Generate token"</li>
+                    <li><strong>IMPORTANT: Copy your token immediately!</strong> GitHub will only show it once.</li>
+                    <li>Store this token somewhere secure (like a password manager) for the duration of this project</li>
+                </ol>
+                
+                <div class="note">
+                    <strong>Note:</strong> You'll use this token in place of your password when Git asks for credentials during your first push.
+                </div>
+            </div>
+
+            <h2 id="step9">Step 9: Push Your Code to GitHub</h2>
+            <div class="step">
+                <h3>9.1 Stage Your Changes</h3>
+                <p>Using VS Code's Git integration:</p>
+                <ol>
+                    <li>Click on the Source Control icon in the sidebar (or press Ctrl+Shift+G / Cmd+Shift+G)</li>
+                    <li>Review the changes listed</li>
+                    <li>Click the "+" (Stage Changes) button next to each file you want to include (or use the "+" button next to "Changes" to stage all)</li>
+                </ol>
+                
+                <h3>9.2 Commit Your Changes</h3>
+                <ol>
+                    <li>Enter a commit message in the text box (e.g., "Add initial Streamlit app code")</li>
+                    <li>Click the checkmark (✓) button to commit the changes</li>
+                </ol>
+                
+                <h3>9.3 Push to GitHub</h3>
+                <ol>
+                    <li>Click the "..." menu in the Source Control panel</li>
+                    <li>Select "Push"</li>
+                    <li>When prompted for authentication:
+                        <ul>
+                            <li>Enter your GitHub username</li>
+                            <li>For the password, paste the Personal Access Token you created</li>
+                        </ul>
+                    </li>
+                    <li>After successful authentication, Git will remember your credentials for future pushes</li>
+                </ol>
+                
+                <h3>9.4 Alternative: Push with Terminal</h3>
+                <p>If you prefer using the terminal:</p>
+                <pre>git add .
+git commit -m "Add initial Streamlit app code"
+git push origin main</pre>
+                <p>When prompted, enter your GitHub username and use your Personal Access Token as the password.</p>
+                
+                <div class="tip">
+                    <strong>Tip:</strong> If you're having authentication issues, you can verify your credential helper is working:
+                    <pre>git config --get credential.helper</pre>
+                    This should show which credential helper your Git is using to store authentication information.
+                </div>
+            </div>
+
+            <h2 id="step10">Step 10: Deploy to Streamlit Community Cloud</h2>
+            <div class="step">
+                <h3>10.1 Sign Up for Streamlit Community Cloud</h3>
+                <ol>
+                    <li>Go to <a href="https://streamlit.io/cloud" target="_blank">https://streamlit.io/cloud</a></li>
+                    <li>Click "Sign up" or "Get started"</li>
+                    <li>Sign in with your GitHub account</li>
+                    <li>Complete any required authorization steps</li>
+                </ol>
+                
+                <h3>10.2 Deploy Your App</h3>
+                <ol>
+                    <li>Once logged in, click "New app"</li>
+                    <li>Select your repository, branch (main), and Python file (app.py)</li>
+                    <li>Click "Deploy!"</li>
+                    <li>Wait for the deployment to complete (this may take a few minutes)</li>
+                </ol>
+                
+                <div class="note">
+                    <strong>Note:</strong> Streamlit Community Cloud will automatically detect and install the packages listed in your <code>requirements.txt</code> file.
+                </div>
+                
+                <h3>10.3 Access Your App</h3>
+                <p>Once deployment is complete, your app will be available at a URL like:</p>
+                <pre>https://username-app-name-streamlit-app-xxxxx.streamlit.app/</pre>
+                <p>You'll see this URL on your Streamlit Cloud dashboard.</p>
+            </div>
+
+            <h2 id="step11">Step 11: Update Your App</h2>
+            <div class="step">
+                <h3>11.1 Make Changes</h3>
+                <ol>
+                    <li>Edit your app files locally in VS Code</li>
+                    <li>Test your changes by running the app locally:
+                        <pre>streamlit run app.py</pre>
+                    </li>
+                </ol>
+                
+                <h3>11.2 Push Updates</h3>
+                <ol>
+                    <li>Stage, commit, and push your changes as in Step 9</li>
+                    <li>Streamlit Community Cloud will automatically detect the changes and rebuild your app</li>
+                </ol>
+                
+                <div class="tip">
+                    <strong>Tip:</strong> You can view deployment logs on the Streamlit Community Cloud dashboard to troubleshoot any issues.
+                </div>
+            </div>
+
+            <h2 id="troubleshooting">Common Issues and Troubleshooting</h2>
+            <table>
+                <tr>
+                    <th>Issue</th>
+                    <th>Solution</th>
+                </tr>
+                <tr>
+                    <td>Missing dependencies</td>
+                    <td>Make sure all required packages are listed in <code>requirements.txt</code></td>
+                </tr>
+                <tr>
+                    <td>File not found errors</td>
+                    <td>Check file paths - use relative paths in your code</td>
+                </tr>
+                <tr>
+                    <td>Authentication issues with Git</td>
+                    <td>Ensure you've configured Git with the correct credentials. Try refreshing your token, or check your credentials with <code>git config --get credential.helper</code></td>
+                </tr>
+                <tr>
+                    <td>Deployment fails</td>
+                    <td>Check the logs in Streamlit Cloud for specific error messages</td>
+                </tr>
+                <tr>
+                    <td>"ModuleNotFoundError" in deployed app</td>
+                    <td>Add the missing package to your <code>requirements.txt</code> file</td>
+                </tr>
+                <tr>
+                    <td>Git says "fatal: not a git repository"</td>
+                    <td>Make sure you're in the right directory. Use <code>pwd</code> to check your current location and <code>cd</code> to the repository folder</td>
+                </tr>
+                <tr>
+                    <td>Stuck in a text editor after a Git command</td>
+                    <td>If in Vim: press Escape, then type <code>:q!</code> and hit Enter. If in Nano: press Ctrl+X, then N to exit without saving</td>
+                </tr>
+            </table>
+
+            <h2 id="best-practices">Best Practices</h2>
+            <ul>
+                <li><strong>Environment Management:</strong> Consider using virtual environments for local development</li>
+                <li><strong>Version Control:</strong> Make small, frequent commits with clear messages</li>
+                <li><strong>Secrets:</strong> Never commit API keys or passwords - use Streamlit's secrets management</li>
+                <li><strong>Documentation:</strong> Keep your README.md updated with installation and usage instructions</li>
+                <li><strong>Testing:</strong> Test your app thoroughly before deployment</li>
+            </ul>
+
+            <div class="note">
+                <strong>Remember:</strong> The free tier of Streamlit Community Cloud has some limitations:
+                <ul>
+                    <li>Apps go to sleep after inactivity</li>
+                    <li>Limited compute resources</li>
+                    <li>Public repositories only</li>
+                </ul>
+                For more advanced needs, consider Streamlit's paid options or other deployment platforms.
+            </div>
+
+            <h2 id="resources">Additional Resources</h2>
+            <ul>
+                <li><a href="https://docs.streamlit.io/" target="_blank">Streamlit Documentation</a></li>
+                <li><a href="https://docs.github.com/en/get-started" target="_blank">GitHub Getting Started Guide</a></li>
+                <li><a href="https://code.visualstudio.com/docs" target="_blank">VS Code Documentation</a></li>
+            </ul>
+
+            <p style="margin-top: 50px; text-align: center; color: #666;">
+                Yale School of Management | MSOM 630: Gen AI and Social Media | Prof. Zaman
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Add active class to current section in navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('h2');
+            const navItems = document.querySelectorAll('.nav-links a');
+            
+            // Highlight active nav item on scroll
+            window.addEventListener('scroll', function() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if(pageYOffset >= (sectionTop - 100)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.parentElement.classList.remove('active');
+                    if(item.getAttribute('href').substring(1) === current) {
+                        item.parentElement.classList.add('active');
+                    }
+                });
+            });
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploying Streamlit Apps - MSOM 630: Gen AI and Social Media</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            scroll-margin-top: 80px; /* This ensures headings aren't cut off when scrolling to anchors */
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #f5f5f5;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .sidebar-header {
+            padding: 0 20px 15px 20px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        .sidebar-header h3 {
+            color: #0f62fe;
+            margin: 0;
+        }
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .nav-links li {
+            padding: 8px 20px;
+            margin: 2px 0;
+        }
+        .nav-links li:hover {
+            background-color: #e9ecef;
+        }
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+        .nav-links .sub-link {
+            padding-left: 15px;
+            font-size: 13px;
+            color: #555;
+        }
+        .content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px 40px;
+            max-width: 1000px;
+        }
+        h1 {
+            color: #0f62fe;
+            border-bottom: 2px solid #0f62fe;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0f62fe;
+            margin-top: 30px;
+        }
+        h3 {
+            margin-top: 25px;
+            color: #444;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .step {
+            background-color: #f9f9f9;
+            border-left: 4px solid #0f62fe;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+        }
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .tip {
+            background-color: #e1f5fe;
+            border-left: 4px solid #03a9f4;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .logo {
+            max-width: 150px;
+        }
+        .active {
+            background-color: #e1f5fe;
+            border-left: 3px solid #0f62fe;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .content {
+                margin-left: 200px;
+            }
+        }
+        @media (max-width: 576px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Deploying Streamlit Apps to Streamlit Community Cloud</h1>
+        <div>Yale School of Management<br>MSOM 630: Gen AI and Social Media<br>Prof. Zaman</div>
+    </div>
+
+    <h2>Overview</h2>
+    <p>This guide will walk you through the process of deploying your Streamlit applications to the Streamlit Community Cloud platform. By the end of this tutorial, you'll have your app accessible on the web for anyone to use.</p>
+    
+    <div class="note">
+        <strong>Note:</strong> Make sure you have your Streamlit app code ready before starting this process. You should have a functioning app that runs locally using <code>streamlit run app.py</code>.
+    </div>
+
+    <h2>Step 1: Create a GitHub Account</h2>
+    <div class="step">
+        <h3>1.1 Sign Up for GitHub</h3>
+        <p>If you don't already have a GitHub account, you'll need to create one:</p>
+        <ol>
+            <li>Go to <a href="https://github.com/" target="_blank">https://github.com/</a></li>
+            <li>Click on "Sign up" in the top-right corner</li>
+            <li>Follow the prompts to create your account
+                <ul>
+                    <li>Enter your email</li>
+                    <li>Create a password</li>
+                    <li>Choose a username</li>
+                </ul>
+            </li>
+            <li>Verify your email address when prompted</li>
+        </ol>
+    </div>
+
+    <h2>Step 2: Create a New Repository</h2>
+    <div class="step">
+        <h3>2.1 Create a New Repository</h3>
+        <p>Once logged into GitHub:</p>
+        <ol>
+            <li>Click the "+" icon in the top-right corner, then select "New repository"</li>
+            <li>Name your repository (e.g., "streamlit-app" or something more specific to your project)</li>
+            <li>Add a description (optional but recommended)</li>
+            <li>Keep the repository Public (required for free Streamlit Community Cloud deployment)</li>
+            <li>Check the box to "Add a README file"</li>
+            <li>Click "Create repository"</li>
+        </ol>
+        
+        <div class="tip">
+            <strong>Tip:</strong> Use a clear, descriptive name for your repository. This will help you and others identify your project later.
+        </div>
+    </div>
+
+    <h2>Step 3: Download and Install Git</h2>
+    <div class="step">
+        <h3>3.1 Download Git</h3>
+        <p>Download Git from the official website based on your operating system:</p>
+        
+        <h4>For Windows:</h4>
+        <ol>
+            <li>Go to <a href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a></li>
+            <li>The download should start automatically</li>
+            <li>Run the installer and follow the prompts
+                <ul>
+                    <li>Accept the default settings for most options</li>
+                    <li>When asked about "Adjusting your PATH environment", select "Git from the command line and also from 3rd-party software"</li>
+                    <li>For "Configuring the line ending conversions", choose "Checkout Windows-style, commit Unix-style line endings"</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <h4>For Mac:</h4>
+        <p>Option 1: If you have Homebrew installed:</p>
+        <pre>brew install git</pre>
+        
+        <p>Option 2: Download the installer:</p>
+        <ol>
+            <li>Go to <a href="https://git-scm.com/download/mac" target="_blank">https://git-scm.com/download/mac</a></li>
+            <li>Download the latest Git for Mac installer</li>
+            <li>Open the downloaded .dmg file and run the installer</li>
+        </ol>
+        
+        <h3>3.2 Verify Git Installation</h3>
+        <p>After installation, verify Git is correctly installed by opening a terminal (Command Prompt on Windows, Terminal on Mac) and running:</p>
+        <pre>git --version</pre>
+        <p>You should see the Git version number displayed.</p>
+    </div>
+
+    <h2>Step 4: Configure Git</h2>
+    <div class="step">
+        <h3>4.1 Set Your Identity</h3>
+        <p>Configure your Git identity with your name and email (use the same email as your GitHub account):</p>
+        <pre>git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"</pre>
+
+        <h3>4.2 Verify Your Git Configuration</h3>
+        <p>You can check your Git identity settings with these commands:</p>
+        <pre>git config user.name
+git config user.email</pre>
+        <p>To view all your Git configuration settings:</p>
+        <pre>git config --list</pre>
+    </div>
+
+    <h2>Step 5: Set Up VS Code</h2>
+    <div class="step">
+        <h3>5.1 Download and Install VS Code</h3>
+        <p>If you don't already have VS Code installed:</p>
+        <ol>
+            <li>Go to <a href="https://code.visualstudio.com/" target="_blank">https://code.visualstudio.com/</a></li>
+            <li>Download the appropriate version for your operating system</li>
+            <li>Run the installer and follow the prompts</li>
+        </ol>
+        
+        <h3>5.2 Install Helpful Extensions</h3>
+        <p>VS Code has several extensions that make working with Python and Streamlit easier:</p>
+        <ol>
+            <li>Open VS Code</li>
+            <li>Click on the Extensions icon in the sidebar (or press Ctrl+Shift+X / Cmd+Shift+X)</li>
+            <li>Search for and install the following extensions:
+                <ul>
+                    <li>"Python" (by Microsoft)</li>
+                    <li>"Pylance" (by Microsoft)</li>
+                    <li>"GitHub Pull Requests and Issues" (by GitHub)</li>
+                    <li>"Streamlit" (for Streamlit code snippets and syntax highlighting)</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <h2>Step 6: Clone Your Repository</h2>
+    <div class="step">
+        <h3>6.1 Clone with VS Code</h3>
+        <ol>
+            <li>Open VS Code</li>
+            <li>Press F1 or Ctrl+Shift+P (Cmd+Shift+P on Mac) to open the command palette</li>
+            <li>Type "Git: Clone" and select that option</li>
+            <li>Enter the URL of your GitHub repository (e.g., <code>https://github.com/yourusername/streamlit-app.git</code>)</li>
+            <li>Select a local folder to store your repository</li>
+            <li>When prompted, open the cloned repository</li>
+        </ol>
+        
+        <h3>6.2 Alternative: Clone with Terminal</h3>
+        <p>If you prefer using the terminal:</p>
+        <ol>
+            <li>Open a terminal or command prompt</li>
+            <li>Navigate to the directory where you want to store your project</li>
+            <li>Run the following command, replacing the URL with your repository URL:
+                <pre>git clone https://github.com/yourusername/streamlit-app.git</pre>
+            </li>
+            <li>Navigate into the cloned repository:
+                <pre>cd streamlit-app</pre>
+            </li>
+            <li>Open VS Code in this directory:
+                <pre>code .</pre>
+            </li>
+        </ol>
+        
+        <h3>6.3 Verify Repository Connection</h3>
+        <p>Check that your local repository is correctly connected to GitHub:</p>
+        <pre>git remote -v</pre>
+        <p>This will display your remote repository URLs. You should see something like:</p>
+        <pre>origin  https://github.com/yourusername/streamlit-app.git (fetch)
+origin  https://github.com/yourusername/streamlit-app.git (push)</pre>
+    </div>
+
+    <h2>Step 7: Set Up Your Streamlit App Files</h2>
+    <div class="step">
+        <h3>7.1 Create App Files</h3>
+        <p>Now that you have your repository cloned locally, add your Streamlit app files to the repository:</p>
+        <ol>
+            <li>Create a new file called <code>app.py</code> (or use your existing file)</li>
+            <li>Add your Streamlit app code to this file</li>
+            <li>Create a <code>requirements.txt</code> file listing all the Python packages your app needs:
+                <pre>streamlit==1.27.0
+pandas==2.0.3
+numpy==1.24.3
+matplotlib==3.7.2
+# Add any other packages your app requires</pre>
+            </li>
+        </ol>
+        
+        <h3>7.2 File Structure</h3>
+        <p>Your repository should have a structure similar to this:</p>
+        <pre>
+streamlit-app/
+├── README.md
+├── app.py
+├── requirements.txt
+└── data/ (optional folder for any data files)
+    └── dataset.csv</pre>
+            
+        <div class="note">
+            <strong>Note:</strong> If your app uses any data files, make sure to include them in your repository.
+        </div>
+    </div>
+
+    <h2>Step 8: Create a GitHub Personal Access Token</h2>
+    <div class="step">
+        <p>Before pushing to GitHub for the first time, you'll need to create a Personal Access Token (PAT). GitHub no longer accepts regular passwords for Git operations.</p>
+        
+        <h3>8.1 Create a Personal Access Token</h3>
+        <ol>
+            <li>Go to <a href="https://github.com/settings/tokens" target="_blank">https://github.com/settings/tokens</a> (or navigate to GitHub → Settings → Developer settings → Personal access tokens)</li>
+            <li>Click "Generate new token" (or "Generate new token (classic)")</li>
+            <li>Give your token a descriptive name (e.g., "Streamlit App Development")</li>
+            <li>Set an expiration date (30 days is a good starting point for class projects)</li>
+            <li>Select scopes/permissions:
+                <ul>
+                    <li>At minimum, check the "repo" box to get full control of repositories</li>
+                </ul>
+            </li>
+            <li>Scroll down and click "Generate token"</li>
+            <li><strong>IMPORTANT: Copy your token immediately!</strong> GitHub will only show it once.</li>
+            <li>Store this token somewhere secure (like a password manager) for the duration of this project</li>
+        </ol>
+        
+        <div class="note">
+            <strong>Note:</strong> You'll use this token in place of your password when Git asks for credentials during your first push.
+        </div>
+    </div>
+
+    <h2>Step 9: Push Your Code to GitHub</h2>
+    <div class="step">
+        <h3>9.1 Stage Your Changes</h3>
+        <p>Using VS Code's Git integration:</p>
+        <ol>
+            <li>Click on the Source Control icon in the sidebar (or press Ctrl+Shift+G / Cmd+Shift+G)</li>
+            <li>Review the changes listed</li>
+            <li>Click the "+" (Stage Changes) button next to each file you want to include (or use the "+" button next to "Changes" to stage all)</li>
+        </ol>
+        
+        <h3>9.2 Commit Your Changes</h3>
+        <ol>
+            <li>Enter a commit message in the text box (e.g., "Add initial Streamlit app code")</li>
+            <li>Click the checkmark (✓) button to commit the changes</li>
+        </ol>
+        
+        <h3>9.3 Push to GitHub</h3>
+        <ol>
+            <li>Click the "..." menu in the Source Control panel</li>
+            <li>Select "Push"</li>
+            <li>When prompted for authentication:
+                <ul>
+                    <li>Enter your GitHub username</li>
+                    <li>For the password, paste the Personal Access Token you created</li>
+                </ul>
+            </li>
+            <li>After successful authentication, Git will remember your credentials for future pushes</li>
+        </ol>
+        
+        <h3>9.4 Alternative: Push with Terminal</h3>
+        <p>If you prefer using the terminal:</p>
+        <pre>git add .
+git commit -m "Add initial Streamlit app code"
+git push origin main</pre>
+        <p>When prompted, enter your GitHub username and use your Personal Access Token as the password.</p>
+        
+        <div class="tip">
+            <strong>Tip:</strong> If you're having authentication issues, you can verify your credential helper is working:
+            <pre>git config --get credential.helper</pre>
+            This should show which credential helper your Git is using to store authentication information.
+        </div>
+    </div>
+
+    <h2>Step 10: Deploy to Streamlit Community Cloud</h2>
+    <div class="step">
+        <h3>10.1 Sign Up for Streamlit Community Cloud</h3>
+        <ol>
+            <li>Go to <a href="https://streamlit.io/cloud" target="_blank">https://streamlit.io/cloud</a></li>
+            <li>Click "Sign up" or "Get started"</li>
+            <li>Sign in with your GitHub account</li>
+            <li>Complete any required authorization steps</li>
+        </ol>
+        
+        <h3>10.2 Deploy Your App</h3>
+        <ol>
+            <li>Once logged in, click "New app"</li>
+            <li>Select your repository, branch (main), and Python file (app.py)</li>
+            <li>Click "Deploy!"</li>
+            <li>Wait for the deployment to complete (this may take a few minutes)</li>
+        </ol>
+        
+        <div class="note">
+            <strong>Note:</strong> Streamlit Community Cloud will automatically detect and install the packages listed in your <code>requirements.txt</code> file.
+        </div>
+        
+        <h3>10.3 Access Your App</h3>
+        <p>Once deployment is complete, your app will be available at a URL like:</p>
+        <pre>https://username-app-name-streamlit-app-xxxxx.streamlit.app/</pre>
+        <p>You'll see this URL on your Streamlit Cloud dashboard.</p>
+    </div>
+
+    <h2>Step 11: Update Your App</h2>
+    <div class="step">
+        <h3>11.1 Make Changes</h3>
+        <ol>
+            <li>Edit your app files locally in VS Code</li>
+            <li>Test your changes by running the app locally:
+                <pre>streamlit run app.py</pre>
+            </li>
+        </ol>
+        
+        <h3>11.2 Push Updates</h3>
+        <ol>
+            <li>Stage, commit, and push your changes as in Step 9</li>
+            <li>Streamlit Community Cloud will automatically detect the changes and rebuild your app</li>
+        </ol>
+        
+        <div class="tip">
+            <strong>Tip:</strong> You can view deployment logs on the Streamlit Community Cloud dashboard to troubleshoot any issues.
+        </div>
+    </div>
+
+    <h2>Common Issues and Troubleshooting</h2>
+    <table>
+        <tr>
+            <th>Issue</th>
+            <th>Solution</th>
+        </tr>
+        <tr>
+            <td>Missing dependencies</td>
+            <td>Make sure all required packages are listed in <code>requirements.txt</code></td>
+        </tr>
+        <tr>
+            <td>File not found errors</td>
+            <td>Check file paths - use relative paths in your code</td>
+        </tr>
+        <tr>
+            <td>Authentication issues with Git</td>
+            <td>Ensure you've configured Git with the correct credentials. Try refreshing your token, or check your credentials with <code>git config --get credential.helper</code></td>
+        </tr>
+        <tr>
+            <td>Deployment fails</td>
+            <td>Check the logs in Streamlit Cloud for specific error messages</td>
+        </tr>
+        <tr>
+            <td>"ModuleNotFoundError" in deployed app</td>
+            <td>Add the missing package to your <code>requirements.txt</code> file</td>
+        </tr>
+        <tr>
+            <td>Git says "fatal: not a git repository"</td>
+            <td>Make sure you're in the right directory. Use <code>pwd</code> to check your current location and <code>cd</code> to the repository folder</td>
+        </tr>
+        <tr>
+            <td>Stuck in a text editor after a Git command</td>
+            <td>If in Vim: press Escape, then type <code>:q!</code> and hit Enter. If in Nano: press Ctrl+X, then N to exit without saving</td>
+        </tr>
+    </table>
+
+    <h2>Best Practices</h2>
+    <ul>
+        <li><strong>Environment Management:</strong> Consider using virtual environments for local development</li>
+        <li><strong>Version Control:</strong> Make small, frequent commits with clear messages</li>
+        <li><strong>Secrets:</strong> Never commit API keys or passwords - use Streamlit's secrets management</li>
+        <li><strong>Documentation:</strong> Keep your README.md updated with installation and usage instructions</li>
+        <li><strong>Testing:</strong> Test your app thoroughly before deployment</li>
+    </ul>
+
+    <div class="note">
+        <strong>Remember:</strong> The free tier of Streamlit Community Cloud has some limitations:
+        <ul>
+            <li>Apps go to sleep after inactivity</li>
+            <li>Limited compute resources</li>
+            <li>Public repositories only</li>
+        </ul>
+        For more advanced needs, consider Streamlit's paid options or other deployment platforms.
+    </div>
+
+    <h2>Additional Resources</h2>
+    <ul>
+        <li><a href="https://docs.streamlit.io/" target="_blank">Streamlit Documentation</a></li>
+        <li><a href="https://docs.github.com/en/get-started" target="_blank">GitHub Getting Started Guide</a></li>
+        <li><a href="https://code.visualstudio.com/docs" target="_blank">VS Code Documentation</a></li>
+    </ul>
+
+    <p style="margin-top: 50px; text-align: center; color: #666;">
+        Yale School of Management | MSOM 630: Gen AI and Social Media | Prof. Zaman
+    </p>
+</body>
+</html>
